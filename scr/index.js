@@ -1,24 +1,32 @@
 import express from 'express';
-import connectDatabase from './config//dbConnect.js';
+import connectDatabase from './config/dbConnect.js';
 
-const conexao = await connectDatabase();
 const app = express();
 const PORT = 3000;
+const conexao = await connectDatabase();
 
-app.get("/",(req,res) => {
+app.use(express.json());
 
-    res.status(200).send("Código de alta perfomance")
+app.get("/", (req, res) => {
+    res.status(200).send("Código de alta perfomance");
+}); 
+
+app.post("/", (req, res) => {
+    const { nome, email, senha } = req.body;
+    console.log("Dados do formulário de cadastro:", nome, email, senha);
+
+    res.status(200).json({ message: "Cadastro realizado com sucesso" });
 });
 
 
 app.listen(PORT, () => {
-    console.log("sevidor escutando")
+    console.log(`Servidor escutando na porta ${PORT}`);
 });
 
-conexao.on("error",(erro) => {
-    console.error("erro de conexão",erro)
-})
+conexao.on("error", (erro) => {
+    console.error("Erro de conexão:", erro);
+});
 
-conexao.once("open",() => {
-    console.log("conexão com o banco feita com sucesso")
-})
+conexao.once("open", () => {
+    console.log("Conexão com o banco de dados estabelecida com sucesso");
+});
